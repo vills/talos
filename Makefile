@@ -107,7 +107,7 @@ INTEGRATION_TEST_PROVISION_DEFAULT_TARGET := integration-test-provision-$(OPERAT
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION ?= v1.32.0-rc.1
 # renovate: datasource=github-releases depName=kastenhq/kubestr
-KUBESTR_VERSION ?= v0.4.46
+KUBESTR_VERSION ?= v0.4.47
 # renovate: datasource=github-releases depName=helm/helm
 HELM_VERSION ?= v3.16.3
 # renovate: datasource=github-releases depName=cilium/cilium-cli
