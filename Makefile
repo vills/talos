@@ -142,6 +142,10 @@ else
 GO_LDFLAGS += -s -w
 endif
 
+ifneq (, $(filter $(SKIP_DOCKER_PULL), t true TRUE y yes 1))
+SKIP_DOCKER_PULL = true
+endif
+
 GO_BUILDFLAGS_TALOSCTL := $(GO_BUILDFLAGS) -tags "$(GO_BUILDTAGS_TALOSCTL)"
 GO_BUILDFLAGS += -tags "$(GO_BUILDTAGS)"
 
@@ -388,7 +392,9 @@ talosctl:
 	@$(MAKE) local-talosctl-targetarch DEST=$(ARTIFACTS)
 
 image-%: ## Builds the specified image. Valid options are aws, azure, digital-ocean, gcp, and vmware (e.g. image-aws)
-	@docker pull $(REGISTRY_AND_USERNAME)/imager:$(IMAGE_TAG)
+	@if [ "$(SKIP_DOCKER_PULL)" != "true" ]; then \
+		docker pull $(REGISTRY_AND_USERNAME)/imager:$(IMAGE_TAG); \
+	fi
 	@for platform in $(subst $(,),$(space),$(PLATFORM)); do \
 		arch=$$(basename "$${platform}") && \
 		docker run --rm -t -v /dev:/dev -v $(PWD)/$(ARTIFACTS):/secureboot:ro -v $(PWD)/$(ARTIFACTS):/out -e SOURCE_DATE_EPOCH=$(SOURCE_DATE_EPOCH) --network=host --privileged $(REGISTRY_AND_USERNAME)/imager:$(IMAGE_TAG) $* --arch $$arch $(IMAGER_ARGS) ; \
